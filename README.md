@@ -6,9 +6,12 @@ Also, there is an offset to prevent the whole extension of the edge from being r
 
 To change these two parameters, and also the opacity and size of the "reactive zone", open the extension.js file in your text editor of choice and change the following lines to your needs:
 
-1. DELAY_TIMEOUT = 300
-2. OFFSET = 5
-3. SIZE = 1
-4. OPACITY = 0
+```javascript
+// Declare some parameters
+const DELAY_TIMEOUT = 300   // miliseconds
+const OFFSET = 5            // percentage
+const SIZE = 1              // pixels
+const OPACITY = 0           // 0-255
+```
 
 Regards.
