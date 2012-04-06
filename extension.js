@@ -115,7 +115,7 @@ EdgeFlipping.prototype = {
                 case "left-edge":
                     Main.wm.actionMoveWorkspaceLeft();
                     break;
-            }
+            };
             this._initialDelayTimeoutId = 0;
         });
     },
@@ -125,6 +125,7 @@ EdgeFlipping.prototype = {
     },
 
     destroy: function() {
+        MainLoop.source_remove(this._initialDelayTimeoutId);
         Main.layoutManager.removeChrome (this.topedge);
         Main.layoutManager.removeChrome (this.rightedge);
         Main.layoutManager.removeChrome (this.bottomedge);
