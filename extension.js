@@ -17,6 +17,7 @@
  */
 
 const Clutter = imports.gi.Clutter;
+const Lang = imports.lang;
 const Main = imports.ui.main
 const MainLoop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
@@ -50,9 +51,9 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.topedge.connect ('enter-event', this._goUp.bind(this));
+        this.topedge.connect ('enter-event', Lang.bind (this, this._goUp));
         // Connect leave-event
-        this.topedge.connect ('leave-event', this._removeTimeout.bind(this));
+        this.topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
         Main.layoutManager.addChrome (this.topedge, { visibleInFullscreen:true });
 
@@ -64,9 +65,9 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.rightedge.connect ('enter-event', this._goRight.bind(this));
+        this.rightedge.connect ('enter-event', Lang.bind (this, this._goRight));
         // Connect leave-event
-        this.rightedge.connect ('leave-event', this._removeTimeout.bind(this));
+        this.rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
         Main.layoutManager.addChrome (this.rightedge, { visibleInFullscreen:true });
 
@@ -78,9 +79,9 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.bottomedge.connect ('enter-event', this._goDown.bind(this));
+        this.bottomedge.connect ('enter-event', Lang.bind (this, this._goDown));
         // Connect leave-event
-        this.bottomedge.connect ('leave-event', this._removeTimeout.bind(this));
+        this.bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
         Main.layoutManager.addChrome (this.bottomedge, { visibleInFullscreen:true });
 
@@ -92,9 +93,9 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.leftedge.connect ('enter-event', this._goLeft.bind(this));
+        this.leftedge.connect ('enter-event', Lang.bind (this, this._goLeft));
         // Connect leave-event
-        this.leftedge.connect ('leave-event', this._removeTimeout.bind(this));
+        this.leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
         Main.layoutManager.addChrome (this.leftedge, { visibleInFullscreen:true });
     },
