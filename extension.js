@@ -1,3 +1,4 @@
+/* -*- mode: js2; js2-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
  * edge-fipping
  * Copyright (C) 2012 Agus Lopez <aremuinan@gmail.com>
@@ -151,3 +152,5 @@ function enable() {
 function disable() {
     switcher.destroy();
 }
+
+/* vim: set shiftwidth=4 tabstop=4 expandtab : */
