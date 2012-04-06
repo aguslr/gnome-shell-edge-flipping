@@ -51,7 +51,7 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.topedge.connect ('enter-event', Lang.bind (this, this._goUp));
+        this.topedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
         this.topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
@@ -65,7 +65,7 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.rightedge.connect ('enter-event', Lang.bind (this, this._goRight));
+        this.rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
         this.rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
@@ -79,7 +79,7 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.bottomedge.connect ('enter-event', Lang.bind (this, this._goDown));
+        this.bottomedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
         this.bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
@@ -93,37 +93,29 @@ EdgeFlipping.prototype = {
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.leftedge.connect ('enter-event', Lang.bind (this, this._goLeft));
+        this.leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
         this.leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
         Main.layoutManager.addChrome (this.leftedge, { visibleInFullscreen:true });
     },
 
-    _goUp: function (actor, event) {
+    _switchWorkspace: function (actor, event) {
         this._initialDelayTimeoutId = MainLoop.timeout_add (DELAY_TIMEOUT, function() {
-            Main.wm.actionMoveWorkspaceUp();
-            this._initialDelayTimeoutId = 0;
-        });
-    },
-
-    _goRight: function (actor, event) {
-        this._initialDelayTimeoutId = MainLoop.timeout_add (DELAY_TIMEOUT, function() {
-            Main.wm.actionMoveWorkspaceRight();
-            this._initialDelayTimeoutId = 0;
-        });
-    },
-
-    _goDown: function (actor, event) {
-        this._initialDelayTimeoutId = MainLoop.timeout_add (DELAY_TIMEOUT, function() {
-            Main.wm.actionMoveWorkspaceDown();
-            this._initialDelayTimeoutId = 0;
-        });
-    },
-
-    _goLeft: function (actor, event) {
-        this._initialDelayTimeoutId = MainLoop.timeout_add (DELAY_TIMEOUT, function() {
-            Main.wm.actionMoveWorkspaceLeft();
+            switch (actor.name) {
+                case "top-edge":
+                    Main.wm.actionMoveWorkspaceUp();
+                    break;
+                case "right-edge":
+                    Main.wm.actionMoveWorkspaceRight();
+                    break;
+                case "bottom-edge":
+                    Main.wm.actionMoveWorkspaceDown();
+                    break;
+                case "left-edge":
+                    Main.wm.actionMoveWorkspaceLeft();
+                    break;
+            }
             this._initialDelayTimeoutId = 0;
         });
     },
