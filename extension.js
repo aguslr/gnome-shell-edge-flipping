@@ -25,7 +25,7 @@ const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
 // Other javascript files in the edge_flipping@aguslr.github.com directory
 // are accesible via Extension.<file name>
-const Extension = imports.ui.extensionSystem.extensions['edge_flipping@aguslr.github.com'];
+const Extension = imports.ui.extensionSystem.extensions['edge-flipping@aguslr.github.com'];
 
 // Declare some parameters
 const DELAY_TIMEOUT = 300   // miliseconds
@@ -145,7 +145,7 @@ function init() {
 
 // Enable extension
 function enable() {
-    switcher = new EdgeFlipping();
+    let switcher = new EdgeFlipping();
 }
 
 // Disable extension
