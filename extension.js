@@ -45,60 +45,60 @@ EdgeFlipping.prototype = {
     _init: function() {
 
         // Define top edge
-        this.topedge = new Clutter.Rectangle ({
+        this._topedge = new Clutter.Rectangle ({
             name: "top-edge",
             x: monitor.x + offsetx, y: monitor.y,
             width: monitor.width - 2*offsetx, height: SIZE,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.topedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+        this._topedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
-        this.topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+        this._topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
-        Main.layoutManager.addChrome (this.topedge, { visibleInFullscreen:true });
+        Main.layoutManager.addChrome (this._topedge, { visibleInFullscreen:true });
 
         // Define right edge
-        this.rightedge = new Clutter.Rectangle ({
+        this._rightedge = new Clutter.Rectangle ({
             name: "right-edge",
             x: monitor.width - SIZE, y: monitor.y + offsety,
             width: SIZE, height: monitor.height - 2*offsety,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+        this._rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
-        this.rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+        this._rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
-        Main.layoutManager.addChrome (this.rightedge, { visibleInFullscreen:true });
+        Main.layoutManager.addChrome (this._rightedge, { visibleInFullscreen:true });
 
         // Define bottom edge
-        this.bottomedge = new Clutter.Rectangle ({
+        this._bottomedge = new Clutter.Rectangle ({
             name: "bottom-edge",
             x: monitor.x + offsetx, y: monitor.height - SIZE,
             width: monitor.width - 2*offsetx, height: SIZE,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.bottomedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+        this._bottomedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
-        this.bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+        this._bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
-        Main.layoutManager.addChrome (this.bottomedge, { visibleInFullscreen:true });
+        Main.layoutManager.addChrome (this._bottomedge, { visibleInFullscreen:true });
 
         // Define left edge
-        this.leftedge = new Clutter.Rectangle ({
+        this._leftedge = new Clutter.Rectangle ({
             name: "left-edge",
             x: monitor.x, y: monitor.y + offsety,
             width: SIZE, height: monitor.height - 2*offsety,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
-        this.leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+        this._leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
         // Connect leave-event
-        this.leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+        this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
         // Add edge
-        Main.layoutManager.addChrome (this.leftedge, { visibleInFullscreen:true });
+        Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
     },
 
     _switchWorkspace: function (actor, event) {
@@ -127,14 +127,14 @@ EdgeFlipping.prototype = {
 
     destroy: function() {
         MainLoop.source_remove(this._initialDelayTimeoutId);
-        Main.layoutManager.removeChrome (this.topedge);
-        Main.layoutManager.removeChrome (this.rightedge);
-        Main.layoutManager.removeChrome (this.bottomedge);
-        Main.layoutManager.removeChrome (this.leftedge);
-        this.topedge.destroy();
-        this.rightedge.destroy();
-        this.bottomedge.destroy();
-        this.leftedge.destroy();
+        Main.layoutManager.removeChrome (this._topedge);
+        Main.layoutManager.removeChrome (this._rightedge);
+        Main.layoutManager.removeChrome (this._bottomedge);
+        Main.layoutManager.removeChrome (this._leftedge);
+        this._topedge.destroy();
+        this._rightedge.destroy();
+        this._bottomedge.destroy();
+        this._leftedge.destroy();
     }
 }
 
