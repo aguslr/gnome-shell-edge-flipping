@@ -1,4 +1,6 @@
-Gnome-shell extension that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce.
+[Gnome-shell Edge-Flipping](http://aguslr.github.com/gnome-shell-edge-flipping/)
+
+[Gnome-shell extension](https://live.gnome.org/GnomeShell/Extensions) that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce.
 
 By default there is a timeout of 300 miliseconds to avoid accidentally switching workspaces, for instance, when the user wants to scroll maximized windows, etc.
 
