@@ -10,8 +10,8 @@ To change these parameters, and also the opacity and size of the "reactive zone"
 
 ```javascript
 // Declare some parameters
-const DELAY_TIMEOUT = 300   // milliseconds
 const ENABLE_HORIZ = false  // boolean
+const DELAY_TIMEOUT = 300   // milliseconds
 const OFFSET = 5            // percentage
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
