@@ -29,6 +29,7 @@ const Extension = imports.ui.extensionSystem.extensions['edge-flipping@aguslr.gi
 
 // Declare some parameters
 const DELAY_TIMEOUT = 300   // milliseconds
+const ENABLE_HORIZ = false  // boolean
 const OFFSET = 5            // percentage
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
@@ -58,20 +59,6 @@ EdgeFlipping.prototype = {
         // Add edge
         Main.layoutManager.addChrome (this._topedge, { visibleInFullscreen:true });
 
-        // Define right edge
-        this._rightedge = new Clutter.Rectangle ({
-            name: "right-edge",
-            x: monitor.width - SIZE, y: monitor.y + offsety,
-            width: SIZE, height: monitor.height - 2*offsety,
-            opacity: OPACITY,
-            reactive: true });
-        // Connect enter-event
-        this._rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-        // Connect leave-event
-        this._rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-        // Add edge
-        Main.layoutManager.addChrome (this._rightedge, { visibleInFullscreen:true });
-
         // Define bottom edge
         this._bottomedge = new Clutter.Rectangle ({
             name: "bottom-edge",
@@ -86,19 +73,36 @@ EdgeFlipping.prototype = {
         // Add edge
         Main.layoutManager.addChrome (this._bottomedge, { visibleInFullscreen:true });
 
-        // Define left edge
-        this._leftedge = new Clutter.Rectangle ({
-            name: "left-edge",
-            x: monitor.x, y: monitor.y + offsety,
-            width: SIZE, height: monitor.height - 2*offsety,
-            opacity: OPACITY,
-            reactive: true });
-        // Connect enter-event
-        this._leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-        // Connect leave-event
-        this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-        // Add edge
-        Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
+        // Check whether horizontal edges are enabled
+        if (ENABLE_HORIZ) {
+            // Define right edge
+            this._rightedge = new Clutter.Rectangle ({
+                name: "right-edge",
+                x: monitor.width - SIZE, y: monitor.y + offsety,
+                width: SIZE, height: monitor.height - 2*offsety,
+                opacity: OPACITY,
+                reactive: true });
+            // Connect enter-event
+            this._rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+            // Connect leave-event
+            this._rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+            // Add edge
+            Main.layoutManager.addChrome (this._rightedge, { visibleInFullscreen:true });
+
+            // Define left edge
+            this._leftedge = new Clutter.Rectangle ({
+                name: "left-edge",
+                x: monitor.x, y: monitor.y + offsety,
+                width: SIZE, height: monitor.height - 2*offsety,
+                opacity: OPACITY,
+                reactive: true });
+            // Connect enter-event
+            this._leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+            // Connect leave-event
+            this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
+            // Add edge
+            Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
+        };
     },
 
     _switchWorkspace: function (actor, event) {
