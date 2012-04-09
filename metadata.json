@@ -4,6 +4,5 @@
     "name": "Edge-Flipping", 
     "original-author": "Agus Lopez",
     "url": "http://aguslr.github.com/gnome-shell-edge-flipping/", 
-    "description": "Gnome-shell extension that provides reactive screen edges to switch between different workspaces.",
-    "version": 1
+    "description": "Gnome-shell extension that provides reactive screen edges to switch between different workspaces."
 }
