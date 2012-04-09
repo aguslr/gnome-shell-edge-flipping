@@ -28,7 +28,7 @@ const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 const Extension = imports.ui.extensionSystem.extensions['edge-flipping@aguslr.github.com'];
 
 // Declare some parameters
-const DELAY_TIMEOUT = 300   // miliseconds
+const DELAY_TIMEOUT = 300   // milliseconds
 const OFFSET = 5            // percentage
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
