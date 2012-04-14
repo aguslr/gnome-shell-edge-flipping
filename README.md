@@ -16,6 +16,6 @@ const OFFSET = 5            // percentage
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
 ```
-[Extension website](http://aguslr.github.com/gnome-shell-edge-flipping/).
+[Extension homepage](http://aguslr.github.com/gnome-shell-edge-flipping/).
 
 Regards.
