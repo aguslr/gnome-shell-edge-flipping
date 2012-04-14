@@ -23,10 +23,6 @@ const Main = imports.ui.main
 const MainLoop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
-// Other javascript files in the edge_flipping@aguslr.github.com directory
-// are accesible via Extension.<file name>
-const Extension = imports.ui.extensionSystem.extensions['edge-flipping@aguslr.github.com'];
-
 // Declare some parameters
 const ENABLE_HORIZ = false  // boolean
 const DELAY_TIMEOUT = 300   // milliseconds
