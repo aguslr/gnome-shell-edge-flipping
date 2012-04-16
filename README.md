@@ -1,6 +1,6 @@
 You can find this extension at the [GNOME Shell Extensions website](https://extensions.gnome.org/extension/275/edge-flipping/).
 
-[Gnome-shell extension](https://live.gnome.org/GnomeShell/Extensions) that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce.
+[Gnome-shell extension](https://live.gnome.org/GnomeShell/Extensions) that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce. Here you can see a [video demo](https://www.youtube.com/watch?v=6BSyOEjRyTc).
 
 By default lateral edges are disabled (since they are mapped to Up/Down anyway) and there is a timeout of 300 milliseconds to avoid accidentally switching workspaces, for instance, when the user wants to scroll maximized windows, etc.
 
