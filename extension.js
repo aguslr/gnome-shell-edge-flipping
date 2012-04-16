@@ -144,8 +144,9 @@ function init() {
 }
 
 // Enable extension
+let switcher;
 function enable() {
-    let switcher = new EdgeFlipping();
+    switcher = new EdgeFlipping();
 }
 
 // Disable extension
