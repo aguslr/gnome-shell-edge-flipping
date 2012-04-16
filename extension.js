@@ -128,13 +128,15 @@ EdgeFlipping.prototype = {
     destroy: function() {
         MainLoop.source_remove(this._initialDelayTimeoutId);
         Main.layoutManager.removeChrome (this._topedge);
-        Main.layoutManager.removeChrome (this._rightedge);
         Main.layoutManager.removeChrome (this._bottomedge);
-        Main.layoutManager.removeChrome (this._leftedge);
         this._topedge.destroy();
-        this._rightedge.destroy();
         this._bottomedge.destroy();
-        this._leftedge.destroy();
+        if (ENABLE_HORIZ) {
+            Main.layoutManager.removeChrome (this._rightedge);
+            Main.layoutManager.removeChrome (this._leftedge);
+            this._rightedge.destroy();
+            this._leftedge.destroy();
+        };
     }
 }
 
