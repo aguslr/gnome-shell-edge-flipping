@@ -24,6 +24,7 @@ const MainLoop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
 // Declare some parameters
+const CONTINUE = false      // boolean
 const ENABLE_HORIZ = false  // boolean
 const DELAY_TIMEOUT = 300   // milliseconds
 const OFFSET = 5            // percentage
@@ -118,6 +119,8 @@ EdgeFlipping.prototype = {
                     break;
             };
             this._initialDelayTimeoutId = 0;
+            if (CONTINUE)
+                return true;
         });
     },
 
