@@ -118,18 +118,23 @@ EdgeFlipping.prototype = {
                     Main.wm.actionMoveWorkspaceLeft();
                     break;
             };
-            this._initialDelayTimeoutId = 0;
-            if (CONTINUE)
+            if (CONTINUE) {
                 return true;
+            } else {
+                this._initialDelayTimeoutId = 0;
+                return false;
+            }
         });
     },
 
     _removeTimeout: function (actor, event) {
-        MainLoop.source_remove(this._initialDelayTimeoutId);
+        if (this._initialDelayTimeoutId != 0)
+            MainLoop.source_remove(this._initialDelayTimeoutId);
     },
 
     destroy: function() {
-        MainLoop.source_remove(this._initialDelayTimeoutId);
+        if (this._initialDelayTimeoutId != 0)
+            MainLoop.source_remove(this._initialDelayTimeoutId);
         Main.layoutManager.removeChrome (this._topedge);
         Main.layoutManager.removeChrome (this._bottomedge);
         this._topedge.destroy();
