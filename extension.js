@@ -38,7 +38,7 @@ function EdgeFlipping() {
     this._init();
 }
 
-// Class structure
+// Object structure
 EdgeFlipping.prototype = {
     _init: function() {
 
@@ -108,19 +108,22 @@ EdgeFlipping.prototype = {
                 case "top-edge":
                     Main.wm.actionMoveWorkspaceUp();
                     break;
-                case "right-edge":
-                    Main.wm.actionMoveWorkspaceRight();
-                    break;
                 case "bottom-edge":
                     Main.wm.actionMoveWorkspaceDown();
+                    break;
+                case "right-edge":
+                    Main.wm.actionMoveWorkspaceRight();
                     break;
                 case "left-edge":
                     Main.wm.actionMoveWorkspaceLeft();
                     break;
             };
+            // Check whether continous workspace switching is enabled
             if (CONTINUE) {
+                // If so, return true for the process to repeat
                 return true;
             } else {
+                // If not, return false so timeout is automatically removed
                 this._initialDelayTimeoutId = 0;
                 return false;
             }
@@ -128,17 +131,21 @@ EdgeFlipping.prototype = {
     },
 
     _removeTimeout: function (actor, event) {
+        // If timeout exists, remove it
         if (this._initialDelayTimeoutId != 0)
             MainLoop.source_remove(this._initialDelayTimeoutId);
     },
 
     destroy: function() {
+        // If timeout exists, remove it
         if (this._initialDelayTimeoutId != 0)
             MainLoop.source_remove(this._initialDelayTimeoutId);
+        // Remove and destroy vertical edges
         Main.layoutManager.removeChrome (this._topedge);
         Main.layoutManager.removeChrome (this._bottomedge);
         this._topedge.destroy();
         this._bottomedge.destroy();
+        // Remove and destroy horizontal edges if the were enabled
         if (ENABLE_HORIZ) {
             Main.layoutManager.removeChrome (this._rightedge);
             Main.layoutManager.removeChrome (this._leftedge);
