@@ -145,7 +145,7 @@ EdgeFlipping.prototype = {
         Main.layoutManager.removeChrome (this._bottomedge);
         this._topedge.destroy();
         this._bottomedge.destroy();
-        // Remove and destroy horizontal edges if the were enabled
+        // Remove and destroy horizontal edges if they were enabled
         if (ENABLE_HORIZ) {
             Main.layoutManager.removeChrome (this._rightedge);
             Main.layoutManager.removeChrome (this._leftedge);
