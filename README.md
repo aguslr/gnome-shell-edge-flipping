@@ -23,7 +23,7 @@ git clone git://github.com/aguslr/gnome-shell-edge-flipping.git ~/.local/share/g
 If you don't have Git, you can just download the extension in a tarball and extract it in the appropiate directory:
 
 ```sh
-mkdir ~/.local/share/gnome-shell/extensions && cd $_ && wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
+mkdir ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com && cd $_ && wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
 ```
 
 ## Configuration
