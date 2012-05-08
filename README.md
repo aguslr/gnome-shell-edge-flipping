@@ -20,15 +20,16 @@ git clone git://github.com/aguslr/gnome-shell-edge-flipping.git ~/.local/share/g
 
 ### Get latest version without Git
 
-If you don't have Git, you can just download the extension in a tarball and extract it in the appropiate directory:
+If you don't have Git, you can just download the extension in a tarball and extract it into the appropiate directory:
 
 ```sh
-mkdir ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com && cd $_ && wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
+mkdir ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com && cd $_
+wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
 ```
 
 ## Configuration
 
-To customize the behaviour of the extension, you can open the file `extension.js` on a text editor and edit the following lines as explained below:
+To customize the behaviour of the extension, you can open the file `extension.js` with a text editor and edit the following lines as explained below:
 
 ```javascript
 // Declare some parameters
@@ -56,7 +57,7 @@ Also, by default both left and right edges are disabled since workspaces are lai
 const ENABLE_HORIZ = true   // boolean
 ```
 
-Have in mind that, at the moment, the actions to switch to left/right are mapped to up/down, therefore the left and right edges will behave exactly like the top and bottom edges.
+Have in mind that, at the moment, the actions for switching left/right are mapped to up/down, therefore the left and right edges will behave exactly like the top and bottom edges.
 
 ### Delay
 
