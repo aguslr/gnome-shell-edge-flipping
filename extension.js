@@ -124,7 +124,6 @@ EdgeFlipping.prototype = {
                 return true;
             } else {
                 // If not, return false so timeout is automatically removed
-                this._initialDelayTimeoutId = 0;
                 return false;
             }
         });
@@ -132,14 +131,12 @@ EdgeFlipping.prototype = {
 
     _removeTimeout: function (actor, event) {
         // If timeout exists, remove it
-        if (this._initialDelayTimeoutId != 0)
-            MainLoop.source_remove(this._initialDelayTimeoutId);
+        MainLoop.source_remove(this._initialDelayTimeoutId);
     },
 
     destroy: function() {
         // If timeout exists, remove it
-        if (this._initialDelayTimeoutId != 0)
-            MainLoop.source_remove(this._initialDelayTimeoutId);
+        MainLoop.source_remove(this._initialDelayTimeoutId);
         // Remove and destroy vertical edges
         Main.layoutManager.removeChrome (this._topedge);
         Main.layoutManager.removeChrome (this._bottomedge);
