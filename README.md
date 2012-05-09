@@ -87,4 +87,7 @@ You can change the size of the edge which is 1 pixel. Also, you can change the o
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
 ```
-Regards.
+
+## License
+
+Copyright (C) 2012 Agus Lopez. Distributed under the terms of the GNU General Public License (see `COPYING` file).
