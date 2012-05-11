@@ -30,9 +30,6 @@ const DELAY_TIMEOUT = 300   // milliseconds
 const OFFSET = 5            // percentage
 const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
-var monitor = Main.layoutManager.primaryMonitor;
-var offsetx = monitor.width * OFFSET/100;
-var offsety = monitor.height * OFFSET/100;
 
 function EdgeFlipping() {
     this._init();
@@ -42,11 +39,16 @@ function EdgeFlipping() {
 EdgeFlipping.prototype = {
     _init: function() {
 
+        // Calculate some variables
+        this._monitor = Main.layoutManager.primaryMonitor;
+        this._offsetx = this._monitor.width * OFFSET/100;
+        this._offsety = this._monitor.height * OFFSET/100;
+
         // Define top edge
         this._topedge = new Clutter.Rectangle ({
             name: "top-edge",
-            x: monitor.x + offsetx, y: monitor.y,
-            width: monitor.width - 2*offsetx, height: SIZE,
+            x: this._monitor.x + this._offsetx, y: this._monitor.y,
+            width: this._monitor.width - 2 * this._offsetx, height: SIZE,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
@@ -59,8 +61,8 @@ EdgeFlipping.prototype = {
         // Define bottom edge
         this._bottomedge = new Clutter.Rectangle ({
             name: "bottom-edge",
-            x: monitor.x + offsetx, y: monitor.height - SIZE,
-            width: monitor.width - 2*offsetx, height: SIZE,
+            x: this._monitor.x + this._offsetx, y: this._monitor.height - SIZE,
+            width: this._monitor.width - 2 * this._offsetx, height: SIZE,
             opacity: OPACITY,
             reactive: true });
         // Connect enter-event
@@ -75,8 +77,8 @@ EdgeFlipping.prototype = {
             // Define right edge
             this._rightedge = new Clutter.Rectangle ({
                 name: "right-edge",
-                x: monitor.width - SIZE, y: monitor.y + offsety,
-                width: SIZE, height: monitor.height - 2*offsety,
+                x: this._monitor.width - SIZE, y: this._monitor.y + this._offsety,
+                width: SIZE, height: this._monitor.height - 2 * this._offsety,
                 opacity: OPACITY,
                 reactive: true });
             // Connect enter-event
@@ -89,8 +91,8 @@ EdgeFlipping.prototype = {
             // Define left edge
             this._leftedge = new Clutter.Rectangle ({
                 name: "left-edge",
-                x: monitor.x, y: monitor.y + offsety,
-                width: SIZE, height: monitor.height - 2*offsety,
+                x: this._monitor.x, y: this._monitor.y + this._offsety,
+                width: SIZE, height: this._monitor.height - 2 * this._offsety,
                 opacity: OPACITY,
                 reactive: true });
             // Connect enter-event
@@ -100,6 +102,9 @@ EdgeFlipping.prototype = {
             // Add edge
             Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
         };
+
+        // If monitors change, recreate edges
+        global.screen.connect('monitors-changed', Lang.bind(this, this._monitorsChanged));
     },
 
     _switchWorkspace: function (actor, event) {
@@ -136,6 +141,13 @@ EdgeFlipping.prototype = {
             Mainloop.source_remove(this._initialDelayTimeoutId);
             this._initialDelayTimeoutId = 0;
         }
+    },
+
+    _monitorsChanged: function (actor, event) {
+        // Remove edges
+        this.destroy();
+        // Recreate edges
+        this._init();
     },
 
     destroy: function() {
