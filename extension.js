@@ -20,7 +20,7 @@
 const Clutter = imports.gi.Clutter;
 const Lang = imports.lang;
 const Main = imports.ui.main
-const MainLoop = imports.mainloop;
+const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
 // Declare some parameters
@@ -103,7 +103,7 @@ EdgeFlipping.prototype = {
     },
 
     _switchWorkspace: function (actor, event) {
-        this._initialDelayTimeoutId = MainLoop.timeout_add (DELAY_TIMEOUT, function() {
+        this._initialDelayTimeoutId = Mainloop.timeout_add (DELAY_TIMEOUT, function() {
             switch (actor.name) {
                 case "top-edge":
                     Main.wm.actionMoveWorkspaceUp();
@@ -131,12 +131,12 @@ EdgeFlipping.prototype = {
 
     _removeTimeout: function (actor, event) {
         // If timeout exists, remove it
-        MainLoop.source_remove(this._initialDelayTimeoutId);
+        Mainloop.source_remove(this._initialDelayTimeoutId);
     },
 
     destroy: function() {
         // If timeout exists, remove it
-        MainLoop.source_remove(this._initialDelayTimeoutId);
+        Mainloop.source_remove(this._initialDelayTimeoutId);
         // Remove and destroy vertical edges
         Main.layoutManager.removeChrome (this._topedge);
         Main.layoutManager.removeChrome (this._bottomedge);
@@ -158,7 +158,7 @@ function init() {
 }
 
 // Enable extension
-let switcher;
+var switcher;
 function enable() {
     switcher = new EdgeFlipping();
 }
