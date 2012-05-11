@@ -88,6 +88,10 @@ const SIZE = 1              // pixels
 const OPACITY = 0           // 0-255
 ```
 
+## Known issues
+
+* *When connecting a second bigger monitor, the reactive edges do not match the pyshical edges.* This happens because GNOME sets the biggest monitor as the main one, restarts the display but doesn't restart the shell, therefore the extension uses the edges position and dimensions of the small monitor (which was the main monitor when the extension was launched) on the big one. The only solution would be for GNOME to restart the shell (or just the extensions) when a new monitor is connected. **Workaround:** For now you can restart the extension by disabling it and enabling it again using gnome-tweak-tool or restart GNOME Shell by pressing Alt+F2 and entering `restart`.
+
 ## License
 
 Copyright (C) 2012 Agus Lopez. Distributed under the terms of the GNU General Public License (see `COPYING` file).
