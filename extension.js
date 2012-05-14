@@ -101,9 +101,9 @@ EdgeFlipping.prototype = {
             this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
             // Add edge
             Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
-        };
+        }
 
-        // If monitors change, recreate edges
+        // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
     },
 
@@ -123,20 +123,18 @@ EdgeFlipping.prototype = {
                     Main.wm.actionMoveWorkspaceLeft();
                     break;
             };
-            // Check whether continous workspace switching is enabled
+            // Check if we are in the last workspace on either end
+            // and continuous switching is enabled
             let currentWorkspace = global.screen.get_active_workspace_index();
             let numberOfWorkspaces = global.screen.n_workspaces - 1;
-            // Check if we are in the last workspace
             if ( actor.name == "top-edge" || actor.name == "left-edge" ) {
-                if ( CONTINUE && currentWorkspace != 0 ) {
+                if ( CONTINUE && currentWorkspace != 0 )
                     // If not, return true for the process to repeat
                     return true;
-                }
             } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) { 
-                if ( CONTINUE && currentWorkspace != numberOfWorkspaces ) {
+                if ( CONTINUE && currentWorkspace != numberOfWorkspaces )
                     // If not, return true for the process to repeat
                     return true;
-                }
             }
             // If not, return false so timeout is automatically removed
             this._initialDelayTimeoutId = 0;
@@ -146,10 +144,9 @@ EdgeFlipping.prototype = {
 
     _removeTimeout: function (actor, event) {
         // If timeout exists, remove it
-        if (this._initialDelayTimeoutId != 0) {
+        if (this._initialDelayTimeoutId != 0)
             Mainloop.source_remove(this._initialDelayTimeoutId);
             this._initialDelayTimeoutId = 0;
-        }
     },
 
     _resetEdges: function (actor, event) {
@@ -168,12 +165,11 @@ EdgeFlipping.prototype = {
         this._topedge.destroy();
         this._bottomedge.destroy();
         // Remove and destroy horizontal edges if they were enabled
-        if (ENABLE_HORIZ) {
+        if (ENABLE_HORIZ)
             Main.layoutManager.removeChrome (this._rightedge);
             Main.layoutManager.removeChrome (this._leftedge);
             this._rightedge.destroy();
             this._leftedge.destroy();
-        };
     }
 }
 
