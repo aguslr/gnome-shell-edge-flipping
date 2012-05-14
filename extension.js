@@ -104,7 +104,7 @@ EdgeFlipping.prototype = {
         };
 
         // If monitors change, recreate edges
-        global.screen.connect('monitors-changed', Lang.bind(this, this._monitorsChanged));
+        global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
     },
 
     _switchWorkspace: function (actor, event) {
@@ -143,7 +143,7 @@ EdgeFlipping.prototype = {
         }
     },
 
-    _monitorsChanged: function (actor, event) {
+    _resetEdges: function (actor, event) {
         // Remove edges
         this.destroy();
         // Recreate edges
