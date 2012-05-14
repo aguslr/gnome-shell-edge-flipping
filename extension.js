@@ -124,14 +124,23 @@ EdgeFlipping.prototype = {
                     break;
             };
             // Check whether continous workspace switching is enabled
-            if (CONTINUE) {
-                // If so, return true for the process to repeat
-                return true;
-            } else {
-                // If not, return false so timeout is automatically removed
-                this._initialDelayTimeoutId = 0;
-                return false;
+            let currentWorkspace = global.screen.get_active_workspace_index();
+            let numberOfWorkspaces = global.screen.n_workspaces - 1;
+            // Check if we are in the last workspace
+            if ( actor.name == "top-edge" || actor.name == "left-edge" ) {
+                if ( CONTINUE && currentWorkspace != 0 ) {
+                    // If not, return true for the process to repeat
+                    return true;
+                }
+            } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) { 
+                if ( CONTINUE && currentWorkspace != numberOfWorkspaces ) {
+                    // If not, return true for the process to repeat
+                    return true;
+                }
             }
+            // If not, return false so timeout is automatically removed
+            this._initialDelayTimeoutId = 0;
+            return false;
         });
     },
 
