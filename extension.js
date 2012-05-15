@@ -126,13 +126,13 @@ EdgeFlipping.prototype = {
             // Check if we are in the last workspace on either end
             // and continuous switching is enabled
             let currentWorkspace = global.screen.get_active_workspace_index();
-            let numberOfWorkspaces = global.screen.n_workspaces - 1;
+            let lastWorkspace = global.screen.n_workspaces - 1;
             if ( actor.name == "top-edge" || actor.name == "left-edge" ) {
                 if ( CONTINUE && currentWorkspace != 0 )
                     // If not, return true for the process to repeat
                     return true;
             } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) { 
-                if ( CONTINUE && currentWorkspace != numberOfWorkspaces )
+                if ( CONTINUE && currentWorkspace != lastWorkspace )
                     // If not, return true for the process to repeat
                     return true;
             }
