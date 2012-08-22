@@ -34,6 +34,7 @@ To customize the behaviour of the extension, you can open the file `extension.js
 ```javascript
 // Declare some parameters
 const CONTINUE = false      // boolean
+const ENABLE_VERT = true    // boolean
 const ENABLE_HORIZ = false  // boolean
 const DELAY_TIMEOUT = 300   // milliseconds
 const OFFSET = 5            // percentage
@@ -49,9 +50,19 @@ By default, once an edge is activated, it will only switch to the adjacent works
 const CONTINUE = true       // boolean
 ```
 
+### Vertical edges
+
+Also, by default only the top and bottom edges are enabled since workspaces are laid out vertically in GNOME shell and this is less confusing. To disable them, just change the following line to `false`:
+
+```javascript
+const ENABLE_VERT = false   // boolean
+```
+
+Remember to at least enable either the vertical or the lateral edges, otherwise the extension will have no effect.
+
 ### Lateral edges
 
-Also, by default both left and right edges are disabled since workspaces are laid out vertically in GNOME shell and it might be confusing. To enable them, just change the following line to `true`:
+To enable lateral edges, just change the following line to `true`:
 
 ```javascript
 const ENABLE_HORIZ = true   // boolean
