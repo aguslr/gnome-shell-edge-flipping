@@ -5,15 +5,12 @@ const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
 
-const Gettext = imports.gettext.domain('gnome-shell-edge-flipping');
-const _ = Gettext.gettext;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
 function init() {
-    Convenience.initTranslations();
+
 }
 
 const EdgeFlippingPrefsWidget = new GObject.Class({

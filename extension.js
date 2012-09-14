@@ -23,10 +23,6 @@ const Main = imports.ui.main
 const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
-const Gettext = imports.gettext.domain('gnome-shell-edge-flipping');
-const _ = Gettext.gettext;
-const N_ = function(e) { return e };
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
