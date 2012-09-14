@@ -33,17 +33,17 @@ To customize the behaviour of the extension, just use the configuration button o
 
 ### Continuous flipping
 
-By default, once an edge is activated, it will only switch to the adjacent workspace. To switch to the one after that, the edge needs to be reactivated. To change this, set the switch to `true`:
+By default, once an edge is activated, it will only switch to the adjacent workspace. To switch to the one after that, the edge needs to be reactivated. To change this, set the switch to `true`.
 
 ### Vertical edges
 
-Also, by default only the top and bottom edges are enabled since workspaces are laid out vertically in GNOME shell and this is less confusing. To disable them, just set the switch to `false`:
+Also, by default only the top and bottom edges are enabled since workspaces are laid out vertically in GNOME shell and this is less confusing. To disable them, just set the switch to `false`.
 
 Remember to at least enable either the vertical or the lateral edges, otherwise the extension will have no effect.
 
 ### Lateral edges
 
-To enable lateral edges, just set the switch for *horizontal edges* to `true`:
+To enable lateral edges, just set the switch for *horizontal edges* to `true`.
 
 Have in mind that, at the moment, the actions for switching left/right are mapped to up/down, therefore the left and right edges will behave exactly like the top and bottom edges.
 
