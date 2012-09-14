@@ -1,0 +1,43 @@
+<schemalist gettext-domain="gnome-shell-edge-flipping">
+  <schema id="org.gnome.shell.extensions.edge-flipping" path="/org/gnome/shell/extensions/edge-flipping/">
+    <key name="continue" type="b">
+      <default>false</default>
+      <summary>Enable continuous flipping.</summary>
+      <description>Continue flipping to next workspace if mouse cursor stays on a reactive edge.</description>
+    </key>
+    <key name="enable-vertical" type="b">
+      <default>true</default>
+      <summary>Enable vertical flipping.</summary>
+      <description>Flip through the workspaces vertically (enable reactive edges at top and bottom of the screen).</description>
+    </key>
+    <key name="enable-horizontal" type="b">
+      <default>false</default>
+      <summary>Enable horizontal flipping.</summary>
+      <description>Flip through the workspaces horizontally (enable reactive edges at left and right of the screen).</description>
+    </key>
+    <key name="delay-timeout" type="i">
+      <default>300</default>
+      <summary>Delay timeout in milliseconds.</summary>
+      <description>The delay timeout between hitting a reactive edge with the cursor
+      and the actual workspace flipping in milliseconds.</description>
+    </key>
+    <key name="offset" type="i">
+      <default>5</default>
+      <range min="0" max="50"/>
+      <summary>Offset to screen border in percent.</summary>
+      <description>In order not to switch workspaces unwantedly, the reactive edge doesn't trigger
+      near the other screen border by this offset.</description>
+    </key>
+    <key name="size" type="i">
+      <default>1</default>
+      <summary>Size of reactive edge in pixels.</summary>
+      <description>The size of the reactive edge in pixels.</description>
+    </key>
+    <key name="opacity" type="i">
+      <default>0</default>
+      <range min="0" max="255"/>
+      <summary>Opacity of reactive edge (0-255).</summary>
+      <description>The opacity of the reactive edge. 0 means transparent, 255 fully visible.</description>
+    </key>
+  </schema>
+</schemalist>

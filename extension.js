@@ -23,14 +23,13 @@ const Main = imports.ui.main
 const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
-// Declare some parameters
-const CONTINUE = false;      // boolean
-const ENABLE_VERT= true;     // boolean
-const ENABLE_HORIZ = false;  // boolean
-const DELAY_TIMEOUT = 300;   // milliseconds
-const OFFSET = 5;            // percentage
-const SIZE = 1;              // pixels
-const OPACITY = 0;           // 0-255
+const Gettext = imports.gettext.domain('gnome-shell-edge-flipping');
+const _ = Gettext.gettext;
+const N_ = function(e) { return e };
+
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
 
 function EdgeFlipping() {
     this._init();
@@ -39,47 +38,48 @@ function EdgeFlipping() {
 // Object structure
 EdgeFlipping.prototype = {
     _init: function() {
+        this._settings = Convenience.getSettings();
 
         // Calculate some variables
         this._monitor = Main.layoutManager.primaryMonitor;
-        this._offsetx = this._monitor.width * OFFSET/100;
-        this._offsety = this._monitor.height * OFFSET/100;
+        this._offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+        this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
 
         // Check whether vertical edges are enabled
         this._edges = [];
-        if (ENABLE_VERT) {
+        if (this._settings.get_boolean("enable-vertical")) {
             // Define top edge
             this._edges.push (new Clutter.Rectangle ({
                 name: "top-edge",
                 x: this._monitor.x + this._offsetx, y: this._monitor.y,
-                width: this._monitor.width - 2 * this._offsetx, height: SIZE,
-                opacity: OPACITY,
+                width: this._monitor.width - 2 * this._offsetx, height: this._settings.get_int("size"),
+                opacity: this._settings.get_int("opacity"),
                 reactive: true })
             );
             // Define bottom edge
             this._edges.push (new Clutter.Rectangle ({
                 name: "bottom-edge",
-                x: this._monitor.x + this._offsetx, y: this._monitor.height - SIZE,
-                width: this._monitor.width - 2 * this._offsetx, height: SIZE,
-                opacity: OPACITY,
+                x: this._monitor.x + this._offsetx, y: this._monitor.height - this._settings.get_int("size"),
+                width: this._monitor.width - 2 * this._offsetx, height: this._settings.get_int("size"),
+                opacity: this._settings.get_int("opacity"),
                 reactive: true })
             );
         }
-        if (ENABLE_HORIZ) {
+        if (this._settings.get_boolean("enable-horizontal")) {
             // Define right edge
             this._edges.push (new Clutter.Rectangle ({
                 name: "right-edge",
-                x: this._monitor.width - SIZE, y: this._monitor.y + this._offsety,
-                width: SIZE, height: this._monitor.height - 2 * this._offsety,
-                opacity: OPACITY,
+                x: this._monitor.width - this._settings.get_int("size"), y: this._monitor.y + this._offsety,
+                width: this._settings.get_int("size"), height: this._monitor.height - 2 * this._offsety,
+                opacity: this._settings.get_int("opacity"),
                 reactive: true })
             );
             // Define left edge
             this._edges.push (new Clutter.Rectangle ({
                 name: "left-edge",
                 x: this._monitor.x, y: this._monitor.y + this._offsety,
-                width: SIZE, height: this._monitor.height - 2 * this._offsety,
-                opacity: OPACITY,
+                width: this._settings.get_int("size"), height: this._monitor.height - 2 * this._offsety,
+                opacity: this._settings.get_int("opacity"),
                 reactive: true })
             );
         }
@@ -94,10 +94,13 @@ EdgeFlipping.prototype = {
         });
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
+
+        /* Monitor settings changes */
+        settingsChangedID = this._settings.connect('changed', Lang.bind(this, this._resetEdges));
     },
 
     _switchWorkspace: function (actor, event) {
-        this._initialDelayTimeoutId = Mainloop.timeout_add (DELAY_TIMEOUT, function() {
+        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), function() {
             switch (actor.name) {
                 case "top-edge":
                     Main.wm.actionMoveWorkspaceUp();
@@ -117,11 +120,11 @@ EdgeFlipping.prototype = {
             let currentWorkspace = global.screen.get_active_workspace_index();
             let lastWorkspace = global.screen.n_workspaces - 1;
             if ( actor.name == "top-edge" || actor.name == "left-edge" ) {
-                if ( CONTINUE && currentWorkspace != 0 )
+                if ( this._settings.get_boolean("continue") && currentWorkspace != 0 )
                     // If not, return true for the process to repeat
                     return true;
             } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) {
-                if ( CONTINUE && currentWorkspace != lastWorkspace )
+                if ( this._settings.get_boolean("continue") && currentWorkspace != lastWorkspace )
                     // If not, return true for the process to repeat
                     return true;
             }
