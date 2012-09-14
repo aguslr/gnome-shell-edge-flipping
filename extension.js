@@ -42,57 +42,118 @@ EdgeFlipping.prototype = {
         this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
 
         // Check whether vertical edges are enabled
-        this._edges = [];
+        this._edges = {};
         if (this._settings.get_boolean("enable-vertical")) {
-            // Define top edge
-            this._edges.push (new Clutter.Rectangle ({
-                name: "top-edge",
-                x: this._monitor.x + this._offsetx, y: this._monitor.y,
-                width: this._monitor.width - 2 * this._offsetx, height: this._settings.get_int("size"),
-                opacity: this._settings.get_int("opacity"),
-                reactive: true })
-            );
-            // Define bottom edge
-            this._edges.push (new Clutter.Rectangle ({
-                name: "bottom-edge",
-                x: this._monitor.x + this._offsetx, y: this._monitor.height - this._settings.get_int("size"),
-                width: this._monitor.width - 2 * this._offsetx, height: this._settings.get_int("size"),
-                opacity: this._settings.get_int("opacity"),
-                reactive: true })
-            );
+            this._createEdges(["top", "bottom"]);
         }
         if (this._settings.get_boolean("enable-horizontal")) {
-            // Define right edge
-            this._edges.push (new Clutter.Rectangle ({
-                name: "right-edge",
-                x: this._monitor.width - this._settings.get_int("size"), y: this._monitor.y + this._offsety,
-                width: this._settings.get_int("size"), height: this._monitor.height - 2 * this._offsety,
-                opacity: this._settings.get_int("opacity"),
-                reactive: true })
-            );
-            // Define left edge
-            this._edges.push (new Clutter.Rectangle ({
-                name: "left-edge",
-                x: this._monitor.x, y: this._monitor.y + this._offsety,
-                width: this._settings.get_int("size"), height: this._monitor.height - 2 * this._offsety,
-                opacity: this._settings.get_int("opacity"),
-                reactive: true })
-            );
+            this._createEdges(["left", "right"]);
         }
-        let self = this;
-        this._edges.forEach(function(edge) {
-            // Connect enter-event
-            edge.connect ('enter-event', Lang.bind (self, self._switchWorkspace));
-            // Connect leave-event
-            edge.connect ('leave-event', Lang.bind (self, self._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (edge, { visibleInFullscreen:true });
-        });
+
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
 
-        /* Monitor settings changes */
-        settingsChangedID = this._settings.connect('changed', Lang.bind(this, this._resetEdges));
+        this._settings.connect('changed::offset', Lang.bind(this, function(){
+            this._offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+            this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
+
+            this._edges["top"].x = this._monitor.x + this._offsetx;
+            this._edges["top"].width = this._monitor.width - 2 * this._offsetx;
+
+            this._edges["bottom"].x = this._monitor.x + this._offsetx;
+            this._edges["bottom"].width = this._monitor.width - 2 * this._offsetx;
+
+            this._edges["right"].y = this._monitor.y + this._offsety;
+            this._edges["right"].height = this._monitor.height - 2 * this._offsety;
+
+            this._edges["left"].y = this._monitor.y + this._offsety;
+            this._edges["left"].height = this._monitor.height - 2 * this._offsety;
+
+        }));
+
+        this._settings.connect('changed::size', Lang.bind(this, function(){
+            this._edges["top"].height = this._settings.get_int("size");
+
+            this._edges["bottom"].y = this._monitor.height - this._settings.get_int("size");
+            this._edges["bottom"].height = this._settings.get_int("size");
+
+            this._edges["right"].x =this._monitor.width - this._settings.get_int("size");
+            this._edges["right"].width = this._settings.get_int("size");
+
+            this._edges["left"].width = this._settings.get_int("size");
+        }));
+
+        this._settings.connect('changed::opacity', Lang.bind(this, function(){
+            for (edge in this._edges) {
+                this._edges[edge].set_opacity(this._settings.get_int("opacity"));
+            }
+        }));
+
+        this._settings.connect('changed::enable-vertical', Lang.bind(this, function(){
+            this._switchEdges(["top", "bottom"]);
+        }));
+
+        this._settings.connect('changed::enable-horizontal', Lang.bind(this, function(){
+            this._switchEdges(["left", "right"]);
+        }));
+    },
+
+    _switchEdges: function(edge_names) {
+        if (this._edges[edge_names[0]] !== undefined && this._edges[edge_names[1]] !== undefined) {
+                this._edges[edge_names[0]].destroy();
+                this._edges[edge_names[1]].destroy();
+                delete this._edges[edge_names[0]];
+                delete this._edges[edge_names[1]];
+
+            } else {
+                this._createEdges(edge_names);
+            }
+    },
+
+    _createEdges: function (edge_names) {
+        // Define top edge
+        if (edge_names.indexOf("top") !== -1) {
+            this._edges["top"] = new Clutter.Rectangle ({
+                name: "top-edge",
+                x: this._monitor.x + this._offsetx,
+                y: this._monitor.y,
+                width: this._monitor.width - 2 * this._offsetx,
+                height: this._settings.get_int("size"),});
+        }
+        // Define bottom edge
+        if (edge_names.indexOf("bottom") !== -1) {
+            this._edges["bottom"] = new Clutter.Rectangle ({
+                name: "bottom-edge",
+                x: this._monitor.x + this._offsetx,
+                y: this._monitor.height - this._settings.get_int("size"),
+                width: this._monitor.width - 2 * this._offsetx,
+                height: this._settings.get_int("size"),});
+        }
+        // Define right edge
+        if (edge_names.indexOf("right") !== -1) {
+            this._edges["right"] = new Clutter.Rectangle ({
+                name: "right-edge",
+                x: this._monitor.width - this._settings.get_int("size"),
+                y: this._monitor.y + this._offsety,
+                width: this._settings.get_int("size"),
+                height: this._monitor.height - 2 * this._offsety,});
+        }
+        // Define left edge
+        if (edge_names.indexOf("left") !== -1) {
+            this._edges["left"] = new Clutter.Rectangle ({
+                name: "left-edge",
+                x: this._monitor.x,
+                y: this._monitor.y + this._offsety,
+                width: this._settings.get_int("size"),
+                height: this._monitor.height - 2 * this._offsety,});
+        }
+        edge_names.forEach(Lang.bind(this, function(edge) {
+            this._edges[edge].connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+            this._edges[edge].connect ('leave-event', Lang.bind (this, this._removeTimeout));
+            this._edges[edge].set_opacity(this._settings.get_int("opacity"));
+            this._edges[edge].set_reactive(true);
+            Main.layoutManager.addChrome (this._edges[edge], { visibleInFullscreen:true });
+        }));
     },
 
     _switchWorkspace: function (actor, event) {
@@ -148,10 +209,10 @@ EdgeFlipping.prototype = {
         // Remove timeout
         this._removeTimeout();
         // Remove and destroy all edges that were enabled
-        this._edges.forEach(function(edge) {
-            Main.layoutManager.removeChrome (edge);
-            edge.destroy();
-        });
+        for (edge in this._edges) {
+            Main.layoutManager.removeChrome (this._edges[edge]);
+            this._edges[edge].destroy();
+        };
     }
 }
 
