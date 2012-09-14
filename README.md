@@ -29,7 +29,7 @@ wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | t
 
 ## Configuration
 
-To customize the behaviour of the extension, just use the configuration button on the [GNOME Shell installed extensions website] or start the application  `gnome-shell-extension-prefs` and choose *Edge Fligpping* from the drop-down menu.
+To customize the behaviour of the extension, just use the configuration button on the [GNOME Shell installed extensions website](https://extensions.gnome.org/local/) or start the application  `gnome-shell-extension-prefs` and choose *Edge Fligpping* from the drop-down menu.
 
 ### Continuous flipping
 
