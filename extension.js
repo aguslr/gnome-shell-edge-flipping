@@ -24,13 +24,13 @@ const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
 // Declare some parameters
-const CONTINUE = false      // boolean
-const ENABLE_VERT= true     // boolean
-const ENABLE_HORIZ = false  // boolean
-const DELAY_TIMEOUT = 300   // milliseconds
-const OFFSET = 5            // percentage
-const SIZE = 1              // pixels
-const OPACITY = 0           // 0-255
+const CONTINUE = false;      // boolean
+const ENABLE_VERT= true;     // boolean
+const ENABLE_HORIZ = false;  // boolean
+const DELAY_TIMEOUT = 300;   // milliseconds
+const OFFSET = 5;            // percentage
+const SIZE = 1;              // pixels
+const OPACITY = 0;           // 0-255
 
 function EdgeFlipping() {
     this._init();
@@ -46,67 +46,52 @@ EdgeFlipping.prototype = {
         this._offsety = this._monitor.height * OFFSET/100;
 
         // Check whether vertical edges are enabled
+        this._edges = [];
         if (ENABLE_VERT) {
             // Define top edge
-            this._topedge = new Clutter.Rectangle ({
+            this._edges.push (new Clutter.Rectangle ({
                 name: "top-edge",
                 x: this._monitor.x + this._offsetx, y: this._monitor.y,
                 width: this._monitor.width - 2 * this._offsetx, height: SIZE,
                 opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._topedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._topedge, { visibleInFullscreen:true });
-
+                reactive: true })
+            );
             // Define bottom edge
-            this._bottomedge = new Clutter.Rectangle ({
+            this._edges.push (new Clutter.Rectangle ({
                 name: "bottom-edge",
                 x: this._monitor.x + this._offsetx, y: this._monitor.height - SIZE,
                 width: this._monitor.width - 2 * this._offsetx, height: SIZE,
                 opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._bottomedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._bottomedge, { visibleInFullscreen:true });
+                reactive: true })
+            );
         }
-
-        // Check whether horizontal edges are enabled
         if (ENABLE_HORIZ) {
             // Define right edge
-            this._rightedge = new Clutter.Rectangle ({
+            this._edges.push (new Clutter.Rectangle ({
                 name: "right-edge",
                 x: this._monitor.width - SIZE, y: this._monitor.y + this._offsety,
                 width: SIZE, height: this._monitor.height - 2 * this._offsety,
                 opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._rightedge, { visibleInFullscreen:true });
-
+                reactive: true })
+            );
             // Define left edge
-            this._leftedge = new Clutter.Rectangle ({
+            this._edges.push (new Clutter.Rectangle ({
                 name: "left-edge",
                 x: this._monitor.x, y: this._monitor.y + this._offsety,
                 width: SIZE, height: this._monitor.height - 2 * this._offsety,
                 opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
+                reactive: true })
+            );
         }
-
+        let self = this;
+        this._edges.forEach(function(edge) {
+            // Connect enter-event
+            edge.connect ('enter-event', Lang.bind (self, self._switchWorkspace));
+            // Connect leave-event
+            edge.connect ('leave-event', Lang.bind (self, self._removeTimeout));
+            // Add edge
+            Main.layoutManager.addChrome (edge, { visibleInFullscreen:true });
+        });
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
     },
@@ -135,7 +120,7 @@ EdgeFlipping.prototype = {
                 if ( CONTINUE && currentWorkspace != 0 )
                     // If not, return true for the process to repeat
                     return true;
-            } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) { 
+            } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) {
                 if ( CONTINUE && currentWorkspace != lastWorkspace )
                     // If not, return true for the process to repeat
                     return true;
@@ -163,18 +148,11 @@ EdgeFlipping.prototype = {
     destroy: function() {
         // Remove timeout
         this._removeTimeout();
-        // Remove and destroy vertical edges if they were enabled
-        if (ENABLE_VERT)
-            Main.layoutManager.removeChrome (this._topedge);
-            Main.layoutManager.removeChrome (this._bottomedge);
-            this._topedge.destroy();
-            this._bottomedge.destroy();
-        // Remove and destroy horizontal edges if they were enabled
-        if (ENABLE_HORIZ)
-            Main.layoutManager.removeChrome (this._rightedge);
-            Main.layoutManager.removeChrome (this._leftedge);
-            this._rightedge.destroy();
-            this._leftedge.destroy();
+        // Remove and destroy all edges that were enabled
+        this._edges.forEach(function(edge) {
+            Main.layoutManager.removeChrome (edge);
+            edge.destroy();
+        });
     }
 }
 
