@@ -24,71 +24,37 @@ const EdgeFlippingPrefsWidget = new GObject.Class({
 
         let row = 0;
 
-        /* continue, vertical & horizontal flipping */
-        let boolean_items = {
-            "continue": "Continue Flipping",
-            "enable-vertical": "Vertical Flipping",
-            "enable-horizontal": "Horizontal Flipping",
-        };
-        for (item in boolean_items) {
-            this.attach(new Gtk.Label({ label: boolean_items[item] }), 0, row, 1, 1);
-            let widget = new Gtk.Switch({ active: this._settings.get_boolean(item) });
-            this._settings.bind(item, widget, 'active', Gio.SettingsBindFlags.DEFAULT);
-            this.attach(widget, 1, row, 1, 1);
-            row++;
-        }
-        /* delay timeout */
-        this.attach(new Gtk.Label({ label: "Delay Timeout (ms)" }), 0, row, 1, 1);
-        let adjustment = new Gtk.Adjustment ({
-            value: this._settings.get_int("delay-timeout"),
-            lower: 0,
-            upper: 2001,
-            step_increment: 10,
-            page_increment: 100 });
-        let widget = new Gtk.SpinButton({ adjustment: adjustment });
-        this._settings.bind("delay-timeout", widget, "value", Gio.SettingsBindFlags.DEFAULT);
-        this.attach(widget, 1, row, 1, 1);
-        row++;
+        row = this._add_boolean("continue", "Continuous Flipping", row);
+        row = this._add_boolean("enable-vertical", "Vertical Flipping", row);
+        row = this._add_boolean("enable-horizontal", "Horizontal Flipping", row);
 
-        /* size */
-        this.attach(new Gtk.Label({ label: "Reactive Area Size (Pixels)" }), 0, row, 1, 1);
-        let adjustment = new Gtk.Adjustment ({
-            value: this._settings.get_int("size"),
-            lower: 1,
-            upper: 100,
-            step_increment: 1,
-            page_increment: 10 });
-        let widget = new Gtk.SpinButton({ adjustment: adjustment });
-        this._settings.bind("size", widget, "value", Gio.SettingsBindFlags.DEFAULT);
-        this.attach(widget, 1, row, 1, 1);
-        row++;
-
-        /* offset */
-        this.attach(new Gtk.Label({ label: "Offset From Screen Edge (%)" }), 0, row, 1, 1);
-        let adjustment = new Gtk.Adjustment ({
-            value: this._settings.get_int("offset"),
-            lower: 0,
-            upper: 50,
-            step_increment: 1,
-            page_increment: 10 });
-        let widget = new Gtk.SpinButton({ adjustment: adjustment });
-        this._settings.bind("offset", widget, "value", Gio.SettingsBindFlags.DEFAULT);
-        this.attach(widget, 1, row, 1, 1);
-        row++;
-
-        /* opacity */
-        this.attach(new Gtk.Label({ label: "Reactive Area Opacity (0-255)" }), 0, row, 1, 1);
-        let adjustment = new Gtk.Adjustment ({
-            value: this._settings.get_int("opacity"),
-            lower: 0,
-            upper: 255,
-            step_increment: 1,
-            page_increment: 10 });
-        let widget = new Gtk.SpinButton({ adjustment: adjustment });
-        this._settings.bind("opacity", widget, "value", Gio.SettingsBindFlags.DEFAULT);
-        this.attach(widget, 1, row, 1, 1);
-        row++;
+        row = this._add_numeric("delay-timeout", "Delay Timeout (ms)", 0, 2000, 10, 100, row);
+        row = this._add_numeric("size", "Reactive Area Size (Pixels)", 1, 500, 1, 10, row);
+        row = this._add_numeric("offset", "Offset From Screen Edge (%)", 0, 50, 1, 10, row);
+        row = this._add_numeric("opacity", "Reactive Area Opacity (0-255)", 0, 255, 1, 10, row);
     },
+
+    _add_boolean: function(key, label, row) {
+        this.attach(new Gtk.Label({ label: label }), 0, row, 1, 1);
+        let widget = new Gtk.Switch({ active: this._settings.get_boolean(key) });
+        this._settings.bind(key, widget, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.attach(widget, 1, row, 1, 1);
+        return ++row;
+    },
+
+    _add_numeric: function(key, label, lower, upper, step, page, row) {
+        this.attach(new Gtk.Label({ label: label }), 0, row, 1, 1);
+        let adjustment = new Gtk.Adjustment ({
+            value: this._settings.get_int(key),
+            lower: lower,
+            upper: upper,
+            step_increment: step,
+            page_increment: page });
+        let widget = new Gtk.SpinButton({ adjustment: adjustment });
+        this._settings.bind(key, widget, "value", Gio.SettingsBindFlags.DEFAULT);
+        this.attach(widget, 1, row, 1, 1);
+        return ++row;
+    }
 });
 
 function buildPrefsWidget() {
