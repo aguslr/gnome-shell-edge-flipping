@@ -42,9 +42,9 @@ EdgeFlipping.prototype = {
         let offsety = this._monitor.height * this._settings.get_int("offset")/100;
         let size = this._settings.get_int("size");
 
-        // Check whether vertical edges are enabled
+        // create all four edges and set reactivity to whether they are enabled
+        // or not
         this._edges = {};
-
         this._edges["top"] = new Clutter.Rectangle ({
             name: "top-edge",
             x: this._monitor.x + offsetx,
@@ -88,6 +88,7 @@ EdgeFlipping.prototype = {
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
 
+        // Monitor changes on edge offset
         this._settings.connect('changed::offset', Lang.bind(this, function(){
             let offsetx = this._monitor.width * this._settings.get_int("offset")/100;
             let offsety = this._monitor.height * this._settings.get_int("offset")/100;
@@ -99,6 +100,7 @@ EdgeFlipping.prototype = {
             this._edges["right"].height = this._edges["left"].height = this._monitor.height - 2 * offsety;
         }));
 
+        // Monitor changes on edge size
         this._settings.connect('changed::size', Lang.bind(this, function(){
             let size = this._settings.get_int("size");
             this._edges["top"].height = size;
@@ -110,17 +112,20 @@ EdgeFlipping.prototype = {
             this._edges["right"].x = this._monitor.width - size;
         }));
 
+        // Monitor changes on edge opacity
         this._settings.connect('changed::opacity', Lang.bind(this, function(){
             for (edge in this._edges) {
                 this._edges[edge].set_opacity(this._settings.get_int("opacity"));
             }
         }));
 
+        // When enabling or disabling vertical flipping, set reactivity of correspinding edge
         this._settings.connect('changed::enable-vertical', Lang.bind(this, function(){
             this._edges["bottom"].set_reactive(this._settings.get_boolean("enable-vertical"));
             this._edges["top"].set_reactive(this._settings.get_boolean("enable-vertical"));
         }));
 
+        // Likewise with horizontal flipping
         this._settings.connect('changed::enable-horizontal', Lang.bind(this, function(){
             this._edges["left"].set_reactive(this._settings.get_boolean("enable-horizontal"));
             this._edges["right"].set_reactive(this._settings.get_boolean("enable-horizontal"));
@@ -164,9 +169,10 @@ EdgeFlipping.prototype = {
 
     _removeTimeout: function (actor, event) {
         // If timeout exists, remove it
-        if (this._initialDelayTimeoutId != 0)
+        if (this._initialDelayTimeoutId != 0) {
             Mainloop.source_remove(this._initialDelayTimeoutId);
             this._initialDelayTimeoutId = 0;
+        }
     },
 
     _resetEdges: function (actor, event) {
@@ -183,7 +189,7 @@ EdgeFlipping.prototype = {
         for (edge in this._edges) {
             Main.layoutManager.removeChrome (this._edges[edge]);
             this._edges[edge].destroy();
-        };
+        }
     }
 }
 
