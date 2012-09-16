@@ -43,12 +43,46 @@ EdgeFlipping.prototype = {
 
         // Check whether vertical edges are enabled
         this._edges = {};
-        if (this._settings.get_boolean("enable-vertical")) {
-            this._createEdges(["top", "bottom"]);
-        }
-        if (this._settings.get_boolean("enable-horizontal")) {
-            this._createEdges(["left", "right"]);
-        }
+
+        this._edges["top"] = new Clutter.Rectangle ({
+            name: "top-edge",
+            x: this._monitor.x + this._offsetx,
+            y: this._monitor.y,
+            width: this._monitor.width - 2 * this._offsetx,
+            height: this._settings.get_int("size"),
+            reactive: this._settings.get_boolean("enable-vertical")
+        });
+        this._edges["bottom"] = new Clutter.Rectangle ({
+            name: "bottom-edge",
+            x: this._monitor.x + this._offsetx,
+            y: this._monitor.height - this._settings.get_int("size"),
+            width: this._monitor.width - 2 * this._offsetx,
+            height: this._settings.get_int("size"),
+            reactive: this._settings.get_boolean("enable-vertical")
+        });
+        this._edges["right"] = new Clutter.Rectangle ({
+            name: "right-edge",
+            x: this._monitor.width - this._settings.get_int("size"),
+            y: this._monitor.y + this._offsety,
+            width: this._settings.get_int("size"),
+            height: this._monitor.height - 2 * this._offsety,
+            reactive: this._settings.get_boolean("enable-horizontal")
+        });
+        this._edges["left"] = new Clutter.Rectangle ({
+            name: "left-edge",
+            x: this._monitor.x,
+            y: this._monitor.y + this._offsety,
+            width: this._settings.get_int("size"),
+            height: this._monitor.height - 2 * this._offsety,
+            reactive: this._settings.get_boolean("enable-horizontal")
+        });
+
+        for (edge in this._edges) {
+            this._edges[edge].connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+            this._edges[edge].connect ('leave-event', Lang.bind (this, this._removeTimeout));
+            this._edges[edge].opacity = this._settings.get_int("opacity");
+            Main.layoutManager.addChrome (this._edges[edge], { visibleInFullscreen:true });
+        };
 
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
@@ -57,30 +91,22 @@ EdgeFlipping.prototype = {
             this._offsetx = this._monitor.width * this._settings.get_int("offset")/100;
             this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
 
-            this._edges["top"].x = this._monitor.x + this._offsetx;
-            this._edges["top"].width = this._monitor.width - 2 * this._offsetx;
+            this._edges["top"].x = this._edges["bottom"].x = this._monitor.x + this._offsetx;
+            this._edges["top"].width = this._edges["bottom"].width = this._monitor.width - 2 * this._offsetx;
 
-            this._edges["bottom"].x = this._monitor.x + this._offsetx;
-            this._edges["bottom"].width = this._monitor.width - 2 * this._offsetx;
-
-            this._edges["right"].y = this._monitor.y + this._offsety;
-            this._edges["right"].height = this._monitor.height - 2 * this._offsety;
-
-            this._edges["left"].y = this._monitor.y + this._offsety;
-            this._edges["left"].height = this._monitor.height - 2 * this._offsety;
-
+            this._edges["right"].y = this._edges["left"].y = this._monitor.y + this._offsety;
+            this._edges["right"].height = this._edges["left"].height = this._monitor.height - 2 * this._offsety;
         }));
 
         this._settings.connect('changed::size', Lang.bind(this, function(){
-            this._edges["top"].height = this._settings.get_int("size");
+            let size = this._settings.get_int("size");
+            this._edges["top"].height = size;
+            this._edges["bottom"].height = size;
+            this._edges["right"].width = size;
+            this._edges["left"].width = size;
 
-            this._edges["bottom"].y = this._monitor.height - this._settings.get_int("size");
-            this._edges["bottom"].height = this._settings.get_int("size");
-
-            this._edges["right"].x =this._monitor.width - this._settings.get_int("size");
-            this._edges["right"].width = this._settings.get_int("size");
-
-            this._edges["left"].width = this._settings.get_int("size");
+            this._edges["bottom"].y = this._monitor.height - size;
+            this._edges["right"].x = this._monitor.width - size;
         }));
 
         this._settings.connect('changed::opacity', Lang.bind(this, function(){
@@ -90,69 +116,13 @@ EdgeFlipping.prototype = {
         }));
 
         this._settings.connect('changed::enable-vertical', Lang.bind(this, function(){
-            this._switchEdges(["top", "bottom"]);
+            this._edges["bottom"].set_reactive(this._settings.get_boolean("enable-vertical"));
+            this._edges["top"].set_reactive(this._settings.get_boolean("enable-vertical"));
         }));
 
         this._settings.connect('changed::enable-horizontal', Lang.bind(this, function(){
-            this._switchEdges(["left", "right"]);
-        }));
-    },
-
-    _switchEdges: function(edge_names) {
-        if (this._edges[edge_names[0]] !== undefined && this._edges[edge_names[1]] !== undefined) {
-                this._edges[edge_names[0]].destroy();
-                this._edges[edge_names[1]].destroy();
-                delete this._edges[edge_names[0]];
-                delete this._edges[edge_names[1]];
-
-            } else {
-                this._createEdges(edge_names);
-            }
-    },
-
-    _createEdges: function (edge_names) {
-        // Define top edge
-        if (edge_names.indexOf("top") !== -1) {
-            this._edges["top"] = new Clutter.Rectangle ({
-                name: "top-edge",
-                x: this._monitor.x + this._offsetx,
-                y: this._monitor.y,
-                width: this._monitor.width - 2 * this._offsetx,
-                height: this._settings.get_int("size"),});
-        }
-        // Define bottom edge
-        if (edge_names.indexOf("bottom") !== -1) {
-            this._edges["bottom"] = new Clutter.Rectangle ({
-                name: "bottom-edge",
-                x: this._monitor.x + this._offsetx,
-                y: this._monitor.height - this._settings.get_int("size"),
-                width: this._monitor.width - 2 * this._offsetx,
-                height: this._settings.get_int("size"),});
-        }
-        // Define right edge
-        if (edge_names.indexOf("right") !== -1) {
-            this._edges["right"] = new Clutter.Rectangle ({
-                name: "right-edge",
-                x: this._monitor.width - this._settings.get_int("size"),
-                y: this._monitor.y + this._offsety,
-                width: this._settings.get_int("size"),
-                height: this._monitor.height - 2 * this._offsety,});
-        }
-        // Define left edge
-        if (edge_names.indexOf("left") !== -1) {
-            this._edges["left"] = new Clutter.Rectangle ({
-                name: "left-edge",
-                x: this._monitor.x,
-                y: this._monitor.y + this._offsety,
-                width: this._settings.get_int("size"),
-                height: this._monitor.height - 2 * this._offsety,});
-        }
-        edge_names.forEach(Lang.bind(this, function(edge) {
-            this._edges[edge].connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            this._edges[edge].connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            this._edges[edge].set_opacity(this._settings.get_int("opacity"));
-            this._edges[edge].set_reactive(true);
-            Main.layoutManager.addChrome (this._edges[edge], { visibleInFullscreen:true });
+            this._edges["left"].set_reactive(this._settings.get_boolean("enable-horizontal"));
+            this._edges["right"].set_reactive(this._settings.get_boolean("enable-horizontal"));
         }));
     },
 
