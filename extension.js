@@ -38,42 +38,43 @@ EdgeFlipping.prototype = {
 
         // Calculate some variables
         this._monitor = Main.layoutManager.primaryMonitor;
-        this._offsetx = this._monitor.width * this._settings.get_int("offset")/100;
-        this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
+        let offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+        let offsety = this._monitor.height * this._settings.get_int("offset")/100;
+        let size = this._settings.get_int("size");
 
         // Check whether vertical edges are enabled
         this._edges = {};
 
         this._edges["top"] = new Clutter.Rectangle ({
             name: "top-edge",
-            x: this._monitor.x + this._offsetx,
+            x: this._monitor.x + offsetx,
             y: this._monitor.y,
-            width: this._monitor.width - 2 * this._offsetx,
-            height: this._settings.get_int("size"),
+            width: this._monitor.width - 2 * offsetx,
+            height: size,
             reactive: this._settings.get_boolean("enable-vertical")
         });
         this._edges["bottom"] = new Clutter.Rectangle ({
             name: "bottom-edge",
-            x: this._monitor.x + this._offsetx,
-            y: this._monitor.height - this._settings.get_int("size"),
-            width: this._monitor.width - 2 * this._offsetx,
-            height: this._settings.get_int("size"),
+            x: this._monitor.x + offsetx,
+            y: this._monitor.height - size,
+            width: this._monitor.width - 2 * offsetx,
+            height: size,
             reactive: this._settings.get_boolean("enable-vertical")
         });
         this._edges["right"] = new Clutter.Rectangle ({
             name: "right-edge",
-            x: this._monitor.width - this._settings.get_int("size"),
-            y: this._monitor.y + this._offsety,
-            width: this._settings.get_int("size"),
-            height: this._monitor.height - 2 * this._offsety,
+            x: this._monitor.width - size,
+            y: this._monitor.y + offsety,
+            width: size,
+            height: this._monitor.height - 2 * offsety,
             reactive: this._settings.get_boolean("enable-horizontal")
         });
         this._edges["left"] = new Clutter.Rectangle ({
             name: "left-edge",
             x: this._monitor.x,
-            y: this._monitor.y + this._offsety,
-            width: this._settings.get_int("size"),
-            height: this._monitor.height - 2 * this._offsety,
+            y: this._monitor.y + offsety,
+            width: size,
+            height: this._monitor.height - 2 * offsety,
             reactive: this._settings.get_boolean("enable-horizontal")
         });
 
@@ -88,14 +89,14 @@ EdgeFlipping.prototype = {
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
 
         this._settings.connect('changed::offset', Lang.bind(this, function(){
-            this._offsetx = this._monitor.width * this._settings.get_int("offset")/100;
-            this._offsety = this._monitor.height * this._settings.get_int("offset")/100;
+            let offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+            let offsety = this._monitor.height * this._settings.get_int("offset")/100;
 
-            this._edges["top"].x = this._edges["bottom"].x = this._monitor.x + this._offsetx;
-            this._edges["top"].width = this._edges["bottom"].width = this._monitor.width - 2 * this._offsetx;
+            this._edges["top"].x = this._edges["bottom"].x = this._monitor.x + offsetx;
+            this._edges["top"].width = this._edges["bottom"].width = this._monitor.width - 2 * offsetx;
 
-            this._edges["right"].y = this._edges["left"].y = this._monitor.y + this._offsety;
-            this._edges["right"].height = this._edges["left"].height = this._monitor.height - 2 * this._offsety;
+            this._edges["right"].y = this._edges["left"].y = this._monitor.y + offsety;
+            this._edges["right"].height = this._edges["left"].height = this._monitor.height - 2 * offsety;
         }));
 
         this._settings.connect('changed::size', Lang.bind(this, function(){
