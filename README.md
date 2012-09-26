@@ -2,7 +2,7 @@
 
 ## UPDATE
 
-**I am no longer using GNOME 3 so I have stopped developing this extension for now. However, a fellow coder, [Christian Schramm](https://github.com/Ed-von-Schleck) has decided to take up where I left so I recommend going to [his repository](https://github.com/Ed-von-Schleck/gnome-shell-edge-flipping) for more updates and instructions. Thanks.**
+I am no longer using GNOME 3 so I have stopped developing this extension for now. However, a fellow coder, [Christian Schramm](https://github.com/Ed-von-Schleck) has decided to take up where I left so I recommend going to [his repository](https://github.com/Ed-von-Schleck/gnome-shell-edge-flipping) for more updates and instructions. Thanks.
 
 ## About
 
