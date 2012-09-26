@@ -23,14 +23,9 @@ const Main = imports.ui.main
 const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
 
-// Declare some parameters
-const CONTINUE = false      // boolean
-const ENABLE_VERT= true     // boolean
-const ENABLE_HORIZ = false  // boolean
-const DELAY_TIMEOUT = 300   // milliseconds
-const OFFSET = 5            // percentage
-const SIZE = 1              // pixels
-const OPACITY = 0           // 0-255
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
 
 function EdgeFlipping() {
     this._init();
@@ -39,80 +34,106 @@ function EdgeFlipping() {
 // Object structure
 EdgeFlipping.prototype = {
     _init: function() {
+        this._settings = Convenience.getSettings();
 
         // Calculate some variables
         this._monitor = Main.layoutManager.primaryMonitor;
-        this._offsetx = this._monitor.width * OFFSET/100;
-        this._offsety = this._monitor.height * OFFSET/100;
+        let offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+        let offsety = this._monitor.height * this._settings.get_int("offset")/100;
+        let size = this._settings.get_int("size");
 
-        // Check whether vertical edges are enabled
-        if (ENABLE_VERT) {
-            // Define top edge
-            this._topedge = new Clutter.Rectangle ({
-                name: "top-edge",
-                x: this._monitor.x + this._offsetx, y: this._monitor.y,
-                width: this._monitor.width - 2 * this._offsetx, height: SIZE,
-                opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._topedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._topedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._topedge, { visibleInFullscreen:true });
+        // create all four edges and set reactivity to whether they are enabled
+        // or not
+        this._edges = {};
+        this._edges["top"] = new Clutter.Rectangle ({
+            name: "top-edge",
+            x: this._monitor.x + offsetx,
+            y: this._monitor.y,
+            width: this._monitor.width - 2 * offsetx,
+            height: size,
+            reactive: this._settings.get_boolean("enable-vertical")
+        });
+        this._edges["bottom"] = new Clutter.Rectangle ({
+            name: "bottom-edge",
+            x: this._monitor.x + offsetx,
+            y: this._monitor.height - size,
+            width: this._monitor.width - 2 * offsetx,
+            height: size,
+            reactive: this._settings.get_boolean("enable-vertical")
+        });
+        this._edges["right"] = new Clutter.Rectangle ({
+            name: "right-edge",
+            x: this._monitor.width - size,
+            y: this._monitor.y + offsety,
+            width: size,
+            height: this._monitor.height - 2 * offsety,
+            reactive: this._settings.get_boolean("enable-horizontal")
+        });
+        this._edges["left"] = new Clutter.Rectangle ({
+            name: "left-edge",
+            x: this._monitor.x,
+            y: this._monitor.y + offsety,
+            width: size,
+            height: this._monitor.height - 2 * offsety,
+            reactive: this._settings.get_boolean("enable-horizontal")
+        });
 
-            // Define bottom edge
-            this._bottomedge = new Clutter.Rectangle ({
-                name: "bottom-edge",
-                x: this._monitor.x + this._offsetx, y: this._monitor.height - SIZE,
-                width: this._monitor.width - 2 * this._offsetx, height: SIZE,
-                opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._bottomedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._bottomedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._bottomedge, { visibleInFullscreen:true });
-        }
-
-        // Check whether horizontal edges are enabled
-        if (ENABLE_HORIZ) {
-            // Define right edge
-            this._rightedge = new Clutter.Rectangle ({
-                name: "right-edge",
-                x: this._monitor.width - SIZE, y: this._monitor.y + this._offsety,
-                width: SIZE, height: this._monitor.height - 2 * this._offsety,
-                opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._rightedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._rightedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._rightedge, { visibleInFullscreen:true });
-
-            // Define left edge
-            this._leftedge = new Clutter.Rectangle ({
-                name: "left-edge",
-                x: this._monitor.x, y: this._monitor.y + this._offsety,
-                width: SIZE, height: this._monitor.height - 2 * this._offsety,
-                opacity: OPACITY,
-                reactive: true });
-            // Connect enter-event
-            this._leftedge.connect ('enter-event', Lang.bind (this, this._switchWorkspace));
-            // Connect leave-event
-            this._leftedge.connect ('leave-event', Lang.bind (this, this._removeTimeout));
-            // Add edge
-            Main.layoutManager.addChrome (this._leftedge, { visibleInFullscreen:true });
-        }
+        for (edge in this._edges) {
+            this._edges[edge].connect ('enter-event', Lang.bind (this, this._switchWorkspace));
+            this._edges[edge].connect ('leave-event', Lang.bind (this, this._removeTimeout));
+            this._edges[edge].opacity = this._settings.get_int("opacity");
+            Main.layoutManager.addChrome (this._edges[edge], { visibleInFullscreen:true });
+        };
 
         // When display setup changes, recreate edges
         global.screen.connect('monitors-changed', Lang.bind(this, this._resetEdges));
+
+        // Monitor changes on edge offset
+        this._settings.connect('changed::offset', Lang.bind(this, function(){
+            let offsetx = this._monitor.width * this._settings.get_int("offset")/100;
+            let offsety = this._monitor.height * this._settings.get_int("offset")/100;
+
+            this._edges["top"].x = this._edges["bottom"].x = this._monitor.x + offsetx;
+            this._edges["top"].width = this._edges["bottom"].width = this._monitor.width - 2 * offsetx;
+
+            this._edges["right"].y = this._edges["left"].y = this._monitor.y + offsety;
+            this._edges["right"].height = this._edges["left"].height = this._monitor.height - 2 * offsety;
+        }));
+
+        // Monitor changes on edge size
+        this._settings.connect('changed::size', Lang.bind(this, function(){
+            let size = this._settings.get_int("size");
+            this._edges["top"].height = size;
+            this._edges["bottom"].height = size;
+            this._edges["right"].width = size;
+            this._edges["left"].width = size;
+
+            this._edges["bottom"].y = this._monitor.height - size;
+            this._edges["right"].x = this._monitor.width - size;
+        }));
+
+        // Monitor changes on edge opacity
+        this._settings.connect('changed::opacity', Lang.bind(this, function(){
+            for (edge in this._edges) {
+                this._edges[edge].set_opacity(this._settings.get_int("opacity"));
+            }
+        }));
+
+        // When enabling or disabling vertical flipping, set reactivity of correspinding edge
+        this._settings.connect('changed::enable-vertical', Lang.bind(this, function(){
+            this._edges["bottom"].set_reactive(this._settings.get_boolean("enable-vertical"));
+            this._edges["top"].set_reactive(this._settings.get_boolean("enable-vertical"));
+        }));
+
+        // Likewise with horizontal flipping
+        this._settings.connect('changed::enable-horizontal', Lang.bind(this, function(){
+            this._edges["left"].set_reactive(this._settings.get_boolean("enable-horizontal"));
+            this._edges["right"].set_reactive(this._settings.get_boolean("enable-horizontal"));
+        }));
     },
 
     _switchWorkspace: function (actor, event) {
-        this._initialDelayTimeoutId = Mainloop.timeout_add (DELAY_TIMEOUT, function() {
+        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), function() {
             switch (actor.name) {
                 case "top-edge":
                     Main.wm.actionMoveWorkspaceUp();
@@ -132,11 +153,11 @@ EdgeFlipping.prototype = {
             let currentWorkspace = global.screen.get_active_workspace_index();
             let lastWorkspace = global.screen.n_workspaces - 1;
             if ( actor.name == "top-edge" || actor.name == "left-edge" ) {
-                if ( CONTINUE && currentWorkspace != 0 )
+                if ( this._settings.get_boolean("continue") && currentWorkspace != 0 )
                     // If not, return true for the process to repeat
                     return true;
-            } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) { 
-                if ( CONTINUE && currentWorkspace != lastWorkspace )
+            } else if ( actor.name == "bottom-edge" || actor.name == "right-edge" ) {
+                if ( this._settings.get_boolean("continue") && currentWorkspace != lastWorkspace )
                     // If not, return true for the process to repeat
                     return true;
             }
@@ -148,9 +169,10 @@ EdgeFlipping.prototype = {
 
     _removeTimeout: function (actor, event) {
         // If timeout exists, remove it
-        if (this._initialDelayTimeoutId != 0)
+        if (this._initialDelayTimeoutId != 0) {
             Mainloop.source_remove(this._initialDelayTimeoutId);
             this._initialDelayTimeoutId = 0;
+        }
     },
 
     _resetEdges: function (actor, event) {
@@ -163,18 +185,11 @@ EdgeFlipping.prototype = {
     destroy: function() {
         // Remove timeout
         this._removeTimeout();
-        // Remove and destroy vertical edges if they were enabled
-        if (ENABLE_VERT)
-            Main.layoutManager.removeChrome (this._topedge);
-            Main.layoutManager.removeChrome (this._bottomedge);
-            this._topedge.destroy();
-            this._bottomedge.destroy();
-        // Remove and destroy horizontal edges if they were enabled
-        if (ENABLE_HORIZ)
-            Main.layoutManager.removeChrome (this._rightedge);
-            Main.layoutManager.removeChrome (this._leftedge);
-            this._rightedge.destroy();
-            this._leftedge.destroy();
+        // Remove and destroy all edges that were enabled
+        for (edge in this._edges) {
+            Main.layoutManager.removeChrome (this._edges[edge]);
+            this._edges[edge].destroy();
+        }
     }
 }
 
