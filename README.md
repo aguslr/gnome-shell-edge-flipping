@@ -29,54 +29,27 @@ wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | t
 
 ## Configuration
 
-To customize the behaviour of the extension, you can open the file `extension.js` with a text editor and edit the following lines as explained below:
-
-```javascript
-// Declare some parameters
-const CONTINUE = false      // boolean
-const ENABLE_VERT = true    // boolean
-const ENABLE_HORIZ = false  // boolean
-const DELAY_TIMEOUT = 300   // milliseconds
-const OFFSET = 5            // percentage
-const SIZE = 1              // pixels
-const OPACITY = 0           // 0-255
-```
+To customize the behaviour of the extension, just use the configuration button on the [GNOME Shell installed extensions website](https://extensions.gnome.org/local/) or start the application  `gnome-shell-extension-prefs` and choose *Edge Fligpping* from the drop-down menu.
 
 ### Continuous flipping
 
-By default, once an edge is activated, it will only switch to the adjacent workspace. To switch to the one after that, the edge needs to be reactivated. To change this you can set the following line to `true`:
-
-```javascript
-const CONTINUE = true       // boolean
-```
+By default, once an edge is activated, it will only switch to the adjacent workspace. To switch to the one after that, the edge needs to be reactivated. To change this, set the switch to `true`.
 
 ### Vertical edges
 
-Also, by default only the top and bottom edges are enabled since workspaces are laid out vertically in GNOME shell and this is less confusing. To disable them, just change the following line to `false`:
-
-```javascript
-const ENABLE_VERT = false   // boolean
-```
+Also, by default only the top and bottom edges are enabled since workspaces are laid out vertically in GNOME shell and this is less confusing. To disable them, just set the switch to `false`.
 
 Remember to at least enable either the vertical or the lateral edges, otherwise the extension will have no effect.
 
 ### Lateral edges
 
-To enable lateral edges, just change the following line to `true`:
-
-```javascript
-const ENABLE_HORIZ = true   // boolean
-```
+To enable lateral edges, just set the switch for *horizontal edges* to `true`.
 
 Have in mind that, at the moment, the actions for switching left/right are mapped to up/down, therefore the left and right edges will behave exactly like the top and bottom edges.
 
 ### Delay
 
-There is a delay between activating the edge and switching to the next workspace. This is set to avoid accidentally changing workspace when we were just trying to drag the scroll bar on a maximized window. By default it is set to 300 milliseconds but it can be changed by editing this line:
-
-```javascript
-const DELAY_TIMEOUT = 300   // milliseconds
-```
+There is a delay between activating the edge and switching to the next workspace. This is set to avoid accidentally changing workspace when we were just trying to drag the scroll bar on a maximized window. By default it is set to 300 milliseconds but it can be changed by entering another number or using the spin button.
 
 If continuous flipping is enabled, this parameter also controls the delay between each workspace change. If it's too fast, increase the amount.
 
@@ -84,21 +57,12 @@ If continuous flipping is enabled, this parameter also controls the delay betwee
 
 There is an offset to prevent the whole extension of the edge from being reactive, again to avoid unintented workspace switching and overlapping other actions (i.e. activating overview or activating the message tray).
 
-By default it is set to 5% of the length of the edge from both ends, that is, only the middle 90% of the edge is used. This can be changed in the following line:
-
-```javascript
-const OFFSET = 5            // percentage
-```
+By default it is set to 5% of the length of the edge from both ends, that is, only the middle 90% of the edge is used. Again, this can be changed by entering another number or using the spin button.
 
 ### Size and opacity of reactive edges
 
-You can change the size of the edge which is 1 pixel. Also, you can change the opacity so you can a visual reference. These two lines would have to be edited accordingly:
-
-```javascript
-const SIZE = 1              // pixels
-const OPACITY = 0           // 0-255
-```
+You can change the size of the edge which is 1 pixel. Also, you can change the opacity so you can a visual reference. Just enter the numbers in the corresponding fields or use the spin buttons.
 
 ## License
 
-Copyright (C) 2012 Agus Lopez. Distributed under the terms of the GNU General Public License (see `COPYING` file).
+Copyright (C) 2012 Agus Lopez and Christian Schramm. Distributed under the terms of the GNU General Public License (see `COPYING` file).
