@@ -65,4 +65,4 @@ You can change the size of the edge which is 1 pixel. Also, you can change the o
 
 ## License
 
-Copyright (C) 2012 Agus Lopez. Distributed under the terms of the GNU General Public License (see `COPYING` file).
+Copyright (C) 2012 Agus Lopez and Christian Schramm. Distributed under the terms of the GNU General Public License (see `COPYING` file).
