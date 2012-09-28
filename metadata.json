@@ -12,5 +12,5 @@
   "settings-schema": "org.gnome.shell.extensions.edge-flipping",
   "url": "http://ed-von-schleck.github.com/gnome-shell-edge-flipping/",
   "uuid": "edge-flipping@aguslr.github.com",
-  "version": 13
+  "version": 14
 }
