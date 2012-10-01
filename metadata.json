@@ -7,7 +7,7 @@
     "Christian Schramm"
   ],
   "shell-version": [
-    "3.4"
+    "3.6"
   ],
   "settings-schema": "org.gnome.shell.extensions.edge-flipping",
   "url": "http://ed-von-schleck.github.com/gnome-shell-edge-flipping/",
