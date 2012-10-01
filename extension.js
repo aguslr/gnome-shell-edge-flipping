@@ -37,8 +37,6 @@ const EdgeFlipping = new Lang.Class({
     _init: function() {
     
         this._settings = Convenience.getSettings();
-        
-        global._edge = this
 
         // Calculate some variables
         this._monitor = Main.layoutManager.primaryMonitor;
@@ -137,7 +135,7 @@ const EdgeFlipping = new Lang.Class({
     },
 
     _switchWorkspace: function (actor, event) {
-        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), function() {
+        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), Lang.bind(this, function() {
             switch (actor.name) {
                 case "top-edge":
                     Main.wm.actionMoveWorkspace(Meta.MotionDirection.UP);
@@ -168,7 +166,7 @@ const EdgeFlipping = new Lang.Class({
             // If not, return false so timeout is automatically removed
             this._initialDelayTimeoutId = 0;
             return false;
-        });
+        }));
     },
 
     _removeTimeout: function (actor, event) {
