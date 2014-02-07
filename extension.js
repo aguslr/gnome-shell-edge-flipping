@@ -1,7 +1,8 @@
 /* -*- mode: js2; js2-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
  * edge-fipping
- * Copyright (C) 2012 Agus Lopez <aremuinan@gmail.com>
+ * Copyright (C) 2012 Agus Lopez <aremuinan@gmail.com>,
+ * Christian Schramm <christian.h.m.schramm@gmail.com>
  *
  * edge-flipping is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,18 +23,19 @@ const Lang = imports.lang;
 const Main = imports.ui.main
 const Mainloop = imports.mainloop;
 const WorkspaceSwitcherPopup = imports.ui.workspaceSwitcherPopup;
+const Meta = imports.gi.Meta
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
-function EdgeFlipping() {
-    this._init();
-}
-
 // Object structure
-EdgeFlipping.prototype = {
+const EdgeFlipping = new Lang.Class({
+
+    Name: 'EdgeFlipping',
+    
     _init: function() {
+    
         this._settings = Convenience.getSettings();
 
         // Calculate some variables
@@ -82,7 +84,7 @@ EdgeFlipping.prototype = {
             this._edges[edge].connect ('enter-event', Lang.bind (this, this._switchWorkspace));
             this._edges[edge].connect ('leave-event', Lang.bind (this, this._removeTimeout));
             this._edges[edge].opacity = this._settings.get_int("opacity");
-            Main.layoutManager.addChrome (this._edges[edge], { visibleInFullscreen:true });
+            Main.layoutManager.addChrome (this._edges[edge], { trackFullscreen: true });
         };
 
         // When display setup changes, recreate edges
@@ -133,19 +135,19 @@ EdgeFlipping.prototype = {
     },
 
     _switchWorkspace: function (actor, event) {
-        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), function() {
+        this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), Lang.bind(this, function() {
             switch (actor.name) {
                 case "top-edge":
-                    Main.wm.actionMoveWorkspaceUp();
+                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.UP);
                     break;
                 case "bottom-edge":
-                    Main.wm.actionMoveWorkspaceDown();
+                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.DOWN);
                     break;
                 case "right-edge":
-                    Main.wm.actionMoveWorkspaceRight();
+                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.RIGHT);
                     break;
                 case "left-edge":
-                    Main.wm.actionMoveWorkspaceLeft();
+                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.LEFT);
                     break;
             };
             // Check if we are in the last workspace on either end
@@ -164,7 +166,7 @@ EdgeFlipping.prototype = {
             // If not, return false so timeout is automatically removed
             this._initialDelayTimeoutId = 0;
             return false;
-        });
+        }));
     },
 
     _removeTimeout: function (actor, event) {
@@ -191,7 +193,7 @@ EdgeFlipping.prototype = {
             this._edges[edge].destroy();
         }
     }
-}
+})
 
 function init() {
     if (Main.wm._workspaceSwitcherPopup == null)

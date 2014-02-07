@@ -19,7 +19,7 @@ You can find this extension at the [GNOME Shell Extensions website](https://exte
 To get the extension directly from my repository, you can use Git to clone it:
 
 ```sh
-git clone git://github.com/aguslr/gnome-shell-edge-flipping.git ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com
+git clone git://github.com/Ed-von-Schleck/gnome-shell-edge-flipping.git ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com
 ```
 
 ### Get latest version without Git
@@ -28,7 +28,7 @@ If you don't have Git, you can just download the extension in a tarball and extr
 
 ```sh
 mkdir ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com && cd $_
-wget https://github.com/aguslr/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
+wget https://github.com/Ed-von-Schleck/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
 ```
 
 ## Configuration
@@ -69,4 +69,4 @@ You can change the size of the edge which is 1 pixel. Also, you can change the o
 
 ## License
 
-Copyright (C) 2012 Agus Lopez and Christian Schramm. Distributed under the terms of the GNU General Public License (see `COPYING` file).
+Copyright (C) 2012 Agus Lopez and others, see `AUTHORS` file. Distributed under the terms of the GNU General Public License (see `COPYING` file).
