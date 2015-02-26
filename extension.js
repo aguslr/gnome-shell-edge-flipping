@@ -138,16 +138,16 @@ const EdgeFlipping = new Lang.Class({
         this._initialDelayTimeoutId = Mainloop.timeout_add (this._settings.get_int("delay-timeout"), Lang.bind(this, function() {
             switch (actor.name) {
                 case "top-edge":
-                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.UP);
+                    global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.UP).activate(global.get_current_time());
                     break;
                 case "bottom-edge":
-                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.DOWN);
+                    global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.DOWN).activate(global.get_current_time());
                     break;
                 case "right-edge":
-                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.RIGHT);
+                    global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.RIGHT).activate(global.get_current_time());
                     break;
                 case "left-edge":
-                    Main.wm.actionMoveWorkspace(Meta.MotionDirection.LEFT);
+                    global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.LEFT).activate(global.get_current_time());
                     break;
             };
             // Check if we are in the last workspace on either end
