@@ -33,9 +33,9 @@ const Convenience = Me.imports.convenience;
 const EdgeFlipping = new Lang.Class({
 
     Name: 'EdgeFlipping',
-    
+
     _init: function() {
-    
+
         this._settings = Convenience.getSettings();
 
         // Calculate some variables
