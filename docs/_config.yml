@@ -1,0 +1,20 @@
+# Site settings
+title: GNOME Shell Edge-Flipping
+email: contact@aguslr.com
+description: >
+  A GNOME Shell extension that provides reactive screen edges to switch between
+  different workspaces
+baseurl: ""
+url: ""
+twitter_username: aguslr
+github_username:  aguslr
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-cayman
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+# Theme settings
+show_downloads: true
