@@ -1,0 +1,10 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+/* Center iframes */
+iframe {
+  display: block;
+  margin: 0 auto;
+}
