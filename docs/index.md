@@ -29,10 +29,14 @@ git clone git://github.com/Ed-von-Schleck/gnome-shell-edge-flipping.git ~/.local
 
 ### Get latest version without Git
 
-If you don't have Git, you can just download the extension in a tarball and extract it into the appropiate directory:
+If you don't have Git, create and change to the directory for the extension:
 
 ```sh
 mkdir ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com && cd $_
+```
+And then just download the extension tarball and extract it:
+
+```sh
 wget https://github.com/Ed-von-Schleck/gnome-shell-edge-flipping/tarball/master -O - | tar -xzv --strip-components 1
 ```
 
