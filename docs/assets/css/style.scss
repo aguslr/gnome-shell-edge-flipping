@@ -3,8 +3,24 @@
 
 @import "{{ site.theme }}";
 
-/* Center iframes */
-iframe {
-  display: block;
-  margin: 0 auto;
+/* Responsive video */
+/* http://www.adamwadeharris.com/how-to-easily-embed-youtube-videos-in-jekyll-sites-without-a-plugin/#comment-3068085140 */
+.embed-video {
+  height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+.embed-video iframe {
+  padding: 1rem 0;
+}
+.embed-video iframe,
+.embed-video object,
+.embed-video embed {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
