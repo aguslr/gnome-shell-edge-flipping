@@ -9,9 +9,8 @@ I am no longer using GNOME 3 so I have stopped developing this extension for now
 
 ## About
 
-[GNOME Shell Edge-Flipping](http://aguslr.github.com/gnome-shell-edge-flipping/) is a [GNOME Shell extension](https://live.gnome.org/GnomeShell/Extensions) that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce. Here you can see a video demo:
+[GNOME Shell Edge-Flipping](http://aguslr.github.com/gnome-shell-edge-flipping/) is a [GNOME Shell extension](https://live.gnome.org/GnomeShell/Extensions) that provides reactive screen edges to switch between different workspaces, similar to what is provided by [Brightside](http://catmur.co.uk/brightside/), by some plugin in Compiz or natively in other Desktop Environments like Xfce.
 
-{% include youtubePlayer.html id='6BSyOEjRyTc' %}
 
 ## Installation
 
