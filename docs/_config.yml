@@ -4,7 +4,7 @@ email: contact@aguslr.com
 description: >
   A GNOME Shell extension that provides reactive screen edges to switch between
   different workspaces
-baseurl: ""
+baseurl: "/gnome-shell-edge-flipping"
 url: ""
 twitter_username: aguslr
 github_username:  aguslr
