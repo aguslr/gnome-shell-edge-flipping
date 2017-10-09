@@ -23,7 +23,7 @@ You can find this extension at the [GNOME Shell Extensions website](https://exte
 To get the extension directly from my repository, you can use Git to clone it:
 
 ```sh
-git clone git://github.com/Ed-von-Schleck/gnome-shell-edge-flipping.git ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com
+git clone https://github.com/Ed-von-Schleck/gnome-shell-edge-flipping ~/.local/share/gnome-shell/extensions/edge-flipping@aguslr.github.com
 ```
 
 ### Get latest version without Git
